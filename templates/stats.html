@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>statis</title>
@@ -8,11 +9,11 @@
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %} ">
   <!-- IonIcons -->
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <!-- Theme style -->
-  <link rel="stylesheet" href="dist/css/adminlte.min.css">
+  <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -126,6 +127,10 @@
             <div class="card-header border-0">
                 <div class="d-flex justify-content-between">
                   <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Statistika qo'shish</button>
+                    <form action="/stats/" method="get">
+                        <input name="soz" type="text">
+                         <button type="submit">Qidirish</button>
+                    </form>
                 </div>
             </div>
             <div class="card-body">
@@ -143,17 +148,19 @@
                         </tr>
                     </thead>
                     <tbody>
+                    {%for stat in stats%}
                         <tr>
-                            <th scope="row">1</th>
-                            <td>Product nomi, brend nomi</td>
-                            <td>Client ismi, do'koni nomi</td>
-                            <td>2022.06.13</td>
-                            <td>30</td>
-                            <td>1260000 so'm</td>
-                            <td>560000 so'm</td>
-                            <td>700000 so'm</td>
+                            <th scope="row">{{forloop.counter}}</th>
+                            <td>{{stat.mahsulot.nom}}, {{stat.mahsulot.brend}}</td>
+                            <td>{{stat.mijoz.ism}}, {{stat.mijoz.nom}}</td>
+                            <td>{{stat.sana}}</td>
+                            <td>{{stat.miqdor}}</td>
+                            <td>{{stat.jami}}</td>
+                            <td>{{stat.tolandi}}</td>
+                            <td>{{stat.nasiya}}</td>
                             <td><a href="#"><button type="submit" class="btn btn-danger" data-toggle="modal">Tahrirlash</button></a></td>
                         </tr>
+                    {% endfor%}
                     </tbody>
                 </table>
             </div>

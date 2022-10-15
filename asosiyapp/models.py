@@ -6,7 +6,7 @@ class Mahsulot(models.Model):
     narx=models.IntegerField()
     miqdor=models.IntegerField()
     brend=models.CharField(max_length=50)
-    kelgan_sana=models.DateField()
+    kelgan_sana=models.DateField(auto_now_add=True)
     olchov=models.CharField(max_length=50)
     sotuvchi=models.ForeignKey(Sotuvchi, on_delete=models.SET_NULL, null=True)
     def __str__(self): return f"{self.nom}, {self.brend}"

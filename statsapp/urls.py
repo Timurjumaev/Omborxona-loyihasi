@@ -1,5 +1,7 @@
 from django.urls import path
 
-urlpatterns = [
+from .views import StatistikaView
 
+urlpatterns = [
+    path('stats/', StatistikaView.as_view())
 ]

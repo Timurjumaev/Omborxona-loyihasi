@@ -1,21 +1,36 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.views import View
-
-from statsapp.models import Statistika
+from userapp.models import *
+from .models import *
 
 
 class StatistikaView(View):
-    def get(self, request):
-        stats=Statistika.objects.filter(sotuvchi__user=request.user)
-        qidiruv_sozi=request.GET.get('soz')
+    def get(self,request):
+        stats = Statistika.objects.filter(sotuvchi__user=request.user)
+        qidiruv_sozi = request.GET.get('soz')
         if qidiruv_sozi is not None:
-            stats=stats.filter(mahsulot__nom__contains=
-            qidiruv_sozi)|stats.filter(mahsulot__brend__contains=
-            qidiruv_sozi)|stats.filter(mijoz__nom__contains=
-            qidiruv_sozi)|stats.filter(mijoz__ism__contains=qidiruv_sozi)
-
-        data={
-            'stats': stats
+            stats = stats.filter(mahsulot__nom__contains=qidiruv_sozi)|stats.filter(mahsulot__brend__contains=
+            qidiruv_sozi)|stats.filter(mahsulot__miqdor__contains=qidiruv_sozi)|stats.filter(mahsulot__narx__contains=
+            qidiruv_sozi)|stats.filter(mahsulot__olchov__contains=qidiruv_sozi)
+        data = {
+            'statistikalar': stats,
+            'mahsulotlar': Mahsulot.objects.all(),
+            'mijozlar': Mijoz.objects.all(),
+            'sotuvchilar': Sotuvchi.objects.all(),
         }
-        return render(request, 'stats.html', data)
+        return render(request,'stats.html', data)
+
+
+    def post(self, request):
+        Statistika.objects.create(
+            mahsulot= Mahsulot.objects.get(id=request.POST.get('mahsulot')),
+            mijoz=Mijoz.objects.get(id=request.POST.get('mijoz')),
+            miqdor=request.POST.get('miqdor'),
+            sana=request.POST.get('sana'),
+            sotuvchi=Sotuvchi.objects.get(user=request.user),
+            jami=request.POST.get('summa'),
+            tolandi=request.POST.get('tolandi'),
+            nasiya=request.POST.get('nasiya'),
+        )
+        return redirect('/stats/')
 

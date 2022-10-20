@@ -10,15 +10,24 @@ class BolimlarView(View):
             return render(request, 'bulimlar.html')
         return redirect('/')
 
+
+
 class MahsulotlarView(View):
     def get(self, request):
-        if request.user.is_authenticated:
+        mahsulotlar=Mahsulot.objects.filter(sotuvchi__user=request.user)
+        qidiruv_sozi=request.GET.get('soz')
+        if qidiruv_sozi is not None:
+            mahsulotlar = mahsulotlar.filter(nom__contains=qidiruv_sozi)|mahsulotlar.filter(brend__contains=
+                                                                                      qidiruv_sozi)|mahsulotlar.filter(
+                miqdor__contains=qidiruv_sozi)|mahsulotlar.filter(narx__contains=
+                                                                        qidiruv_sozi)|mahsulotlar.filter(
+                olchov__contains=qidiruv_sozi)
 
-            data={
-                'mahsulotlar': Mahsulot.objects.filter(sotuvchi__user=request.user)
-            }
-            return render(request, 'products.html', data)
-        return redirect('/')
+        data={
+            'mahsulotlar': mahsulotlar
+        }
+        return render(request, 'products.html', data)
+
     def post(self, request):
         Mahsulot.objects.create(
             nom=request.POST.get('nom'),
@@ -31,14 +40,20 @@ class MahsulotlarView(View):
         )
         return redirect('/bolimlar/mahsulotlar/')
 
+
+
 class MijozlarView(View):
     def get(self, request):
-        if request.user.is_authenticated:
-            data={
-                'mijozlar': Mijoz.objects.filter(sotuvchi__user=request.user)
-            }
-            return render(request, 'clients.html', data)
-        return redirect('/')
+        mijozlar=Mijoz.objects.filter(sotuvchi__user=request.user)
+        qidiruv_sozi=request.GET.get('soz')
+        if qidiruv_sozi is not None:
+            mijozlar=mijozlar.filter(nom__contains=qidiruv_sozi)|mijozlar.filter(ism__contains=
+            qidiruv_sozi)|mijozlar.filter(manzil__contains=qidiruv_sozi)|mijozlar.filter(tel__contains=
+            qidiruv_sozi)|mijozlar.filter(qarz__contains=qidiruv_sozi)
+        data={
+            'mijozlar': mijozlar
+        }
+        return render(request, 'clients.html', data)
 
 class ProductDeleteView(View):
     def get(self, request, pk):

@@ -12,5 +12,5 @@ class Statistika(models.Model):
     sotuvchi = models.ForeignKey(Sotuvchi, on_delete=models.SET_NULL, null=True)
     jami = models.FloatField()
     tolandi = models.FloatField()
-    nasiya = models.FloatField()
+    nasiya = models.IntegerField()
     def __str__(self): return self.mahsulot.nom
